@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-blue: #00f2ff;
+  --color-neon-purple: #bc13fe;
+}
+
+/* Custom glow effect */
+.neon-shadow-blue {
+  filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.7));
+}
+
+.neon-shadow-purple {
+  filter: drop-shadow(0 0 10px rgba(188, 19, 254, 0.7));
+}
+
+.path-gradient {
+  background: linear-gradient(90deg, #bc13fe 0%, #00f2ff 100%);
+}
+
+/* globals.css */
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+

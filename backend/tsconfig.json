@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    /* 🌐 Target & Module */
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    /* 🛡️ Type Checking */
+    "strict": true,
+    "skipLibCheck": true,
+    
+    /* 🛠️ Style & Compatibility */
+    "verbatimModuleSyntax": false,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    
+    /* 📂 Output Settings */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}
