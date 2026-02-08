@@ -7,6 +7,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+// Corrected animation objects with 'as const' to prevent Vercel build errors
+const fadeInUp = {
+  initial: { opacity: 0, y: 60 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.8, ease: "easeOut" }
+} as const;
+
 export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
   const { scrollYProgress } = useScroll();
   const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
@@ -19,7 +27,6 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
     <div className="relative min-h-screen bg-[#050505] text-white flex flex-col md:flex-row overflow-x-hidden">
       
       {/* --- LEFT SIDE: INNOVATIVE INTERACTIVE STORY --- */}
-      {/* We add pr-[500px] to prevent content from going under the fixed login column */}
       <main className="flex-1 relative md:pr-[500px]">
         {/* Neon Progress Rail */}
         <motion.div 
@@ -36,7 +43,7 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
              <Code size={400} />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
+          <motion.div initial={fadeInUp.initial} whileInView={fadeInUp.whileInView} transition={fadeInUp.transition}>
             <div className="relative inline-block">
               <Image src="/logo.png" alt="Logo" width={400} height={400} className="mb-10 drop-shadow-[0_0_20px_rgba(168,85,247,0.4)]" />
               <motion.div 
@@ -130,7 +137,7 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
         {/* --- 4. THE GROUPS --- */}
         <section className="h-screen flex flex-col justify-center px-10 md:px-24 bg-[#080808]">
           <h2 className="text-4xl font-black mb-16 italic text-purple-500 tracking-widest uppercase text-center md:text-left">Target Groups & Missions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             <GroupCard title="Newbie Coder" desc="Beginners learning from scratch with zero experience." step="01" />
             <GroupCard title="College Hero" desc="Prepare for semester exams and technical lab tests." step="02" />
             <GroupCard title="Job Hunter" desc="Master pointers and structures for interview rounds." step="03" />
@@ -140,7 +147,6 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
       </main>
 
       {/* --- RIGHT SIDE: PERMANENT FIXED AUTH RECTANGLE --- */}
-      {/* Changed md:sticky to md:fixed and added right-0 to make it truly unmovable */}
       <aside className="md:w-[500px] md:h-screen md:fixed md:right-0 md:top-0 p-6 md:p-10 flex items-center justify-center z-30">
         <motion.div layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full bg-[#0d0d0d] border border-white/10 p-10 rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-600/10 blur-3xl rounded-full" />
