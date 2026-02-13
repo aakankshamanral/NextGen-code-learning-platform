@@ -55,7 +55,28 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="fixed bottom-10 right-10 z-[100] flex flex-col items-end gap-4">
+    <div className="fixed bottom-10 right-10 z-[100] flex flex-col items-end gap-4 font-sans">
+      
+      {/* --- 💬 CONNECTED DIALOGUE BOX --- */}
+      <AnimatePresence>
+        {!isChatOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 15, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 15, scale: 0.9 }}
+            className="absolute bottom-24 right-2 bg-[#161b22]/90 backdrop-blur-md text-white px-5 py-4 rounded-xl rounded-br-none shadow-[0_20px_50px_rgba(0,0,0,0.6)] z-[110] pointer-events-none border-2 border-cyan-500/40"
+          >
+            <p className="text-[10px] font-black uppercase tracking-[0.12em]">
+              Hi! Your AI Robo BUDDY here. Ask anything! 🤖
+            </p>
+            
+            {/* Seamless Connected Tail */}
+            <div className="absolute -bottom-[14px] right-[-2px] w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-cyan-500/40"></div>
+            <div className="absolute -bottom-[10px] right-[0px] w-0 h-0 border-l-[13px] border-l-transparent border-t-[13px] border-t-[#1c232b]"></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {isChatOpen && (
           <motion.div 
@@ -108,14 +129,13 @@ export default function ChatBot() {
               )}
             </div>
 
-            {/* --- ✍️ FIXED INPUT SECTION --- */}
+            {/* Input Section */}
             <form onSubmit={handleSendMessage} className="p-4 border-t border-white/5 bg-[#1c2128] flex gap-2">
               <input 
                 type="text" 
                 value={input} 
                 onChange={(e) => setInput(e.target.value)} 
                 placeholder="Ask your query..." 
-                /* Explicitly set text-white here */
                 className="flex-1 bg-black/40 border border-gray-700 rounded-xl px-4 py-2 text-xs text-white placeholder-gray-500 outline-none focus:border-cyan-500/50 transition-all" 
               />
               <button type="submit" className="bg-cyan-500 p-2 rounded-xl text-black hover:scale-110 active:scale-95 transition-all shadow-lg">

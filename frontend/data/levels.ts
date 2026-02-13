@@ -99,7 +99,68 @@ export const LEVEL_DATA: Record<string, LevelContent> = {
         { input: "", expectedOutput: "I am 20 years old" }
       ]
     },
-    quizQuestions: []
+    quizQuestions: [
+      {
+    q: "Which of the following is an invalid variable name in C?",
+    options: ["_myVariable", "Total_Amount", "2ndLevel", "student_age"],
+    correct: 2,
+    explanation: "Identifiers in C cannot start with a digit; they must begin with a letter or an underscore (_)."
+  },
+  {
+    q: "How many bytes does a 'double' data type typically occupy in memory?",
+    options: ["2 bytes", "4 bytes", "8 bytes", "16 bytes"],
+    correct: 2,
+    explanation: "A 'double' provides double precision and typically uses 8 bytes (64 bits) to store values."
+  },
+  {
+    q: "Which format specifier is used for an 'unsigned int'?",
+    options: ["%d", "%u", "%i", "%f"],
+    correct: 1,
+    explanation: "%u is the standard format specifier for unsigned integers, whereas %d is for signed integers."
+  },
+  {
+    q: "What is the result of the following code: 'int x = 10.85;'?",
+    options: ["x = 10.85", "x = 11", "x = 10", "Compilation Error"],
+    correct: 2,
+    explanation: "C performs truncation when assigning a float to an int, meaning it simply drops the decimal part without rounding."
+  },
+  {
+    q: "Which keyword is used to qualify a variable that can only store non-negative values?",
+    options: ["positive", "unsigned", "signed", "long"],
+    correct: 1,
+    explanation: "The 'unsigned' keyword removes the sign bit, allowing the variable to store only zero and positive numbers."
+  },
+  {
+    q: "To store the value of Pi (3.1415926535) accurately, which type is best?",
+    options: ["int", "char", "float", "double"],
+    correct: 3,
+    explanation: "'double' is preferred for high-precision decimals as it offers 15-17 digits of precision compared to float's 6-7."
+  },
+  {
+    q: "What will 'sizeof(char)' always return in C?",
+    options: ["1", "2", "4", "It depends on the compiler"],
+    correct: 0,
+    explanation: "In the C standard, the size of a 'char' is defined as exactly 1 byte."
+  },
+  {
+    q: "In C, the range of a 'signed char' is -128 to 127. What determines this range?",
+    options: ["The number of bits (8)", "The ASCII table", "The Header file", "The operating system"],
+    correct: 0,
+    explanation: "A char uses 8 bits. For signed types, $2^8 = 256$ total values, split between negative and positive $(-128$ to $+127)$."
+  },
+  {
+    q: "Which of these is a 'Constant' definition using the preprocessor?",
+    options: ["const int MAX = 10;", "#define MAX 10", "int MAX = 10;", "static int MAX = 10;"],
+    correct: 1,
+    explanation: "#define is a preprocessor directive that replaces all instances of 'MAX' with '10' before compilation."
+  },
+  {
+    q: "What is 'Explicit Type Casting'?",
+    options: ["Automatic conversion by compiler", "Manual conversion by the programmer", "Deleting a variable type", "Changing a variable name"],
+    correct: 1,
+    explanation: "Explicit casting is when a programmer manually converts a type using parentheses, like '(float)total / count'."
+  }
+    ]
 
   },
 

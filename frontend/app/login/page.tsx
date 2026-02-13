@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; 
 import { motion, useScroll, useSpring, AnimatePresence, useTransform } from "framer-motion";
 import { 
-  Map, MessageSquareCode, Zap, BrainCircuit, 
-  ChevronDown, BookMarked, FileText, Mail, Lock, User, ArrowRight, StickyNote, HelpCircle, Sparkles, Code, Cpu
+  MessageSquareCode, Zap, ChevronDown, FileText, Mail, Lock, 
+  ArrowRight, StickyNote, HelpCircle, Sparkles, Code, Cpu, ArrowLeft 
 } from "lucide-react";
 import Image from "next/image";
 
-// Corrected animation objects with 'as const' to prevent Vercel build errors
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   whileInView: { opacity: 1, y: 0 },
@@ -16,19 +16,31 @@ const fadeInUp = {
 } as const;
 
 export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => void }) {
+  const router = useRouter(); 
   const { scrollYProgress } = useScroll();
   const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-  
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   const [authState, setAuthState] = useState<'login' | 'reg-email' | 'reg-otp' | 'reg-pass'>('login');
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-white flex flex-col md:flex-row overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#050505] text-white flex flex-col md:flex-row overflow-x-hidden font-sans">
       
-      {/* --- LEFT SIDE: INNOVATIVE INTERACTIVE STORY --- */}
-      <main className="flex-1 relative md:pr-[500px]">
-        {/* Neon Progress Rail */}
+      {/* --- 🧩 PLUS SIGN GRID BACKGROUND --- */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")` }}>
+      </div>
+
+      {/* --- ⬅️ BACK TO MAIN PAGE BUTTON --- */}
+      <button 
+        onClick={() => router.push('/')}
+        className="fixed top-8 left-10 z-50 flex items-center gap-2 text-gray-500 hover:text-purple-400 transition-colors group cursor-pointer"
+      >
+        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Back to Hub</span>
+      </button>
+
+      <main className="flex-1 relative md:pr-[500px] z-10">
         <motion.div 
           className="fixed left-0 top-0 w-1.5 bg-gradient-to-b from-purple-500 via-blue-500 to-purple-600 z-50 origin-top shadow-[0_0_30px_rgba(168,85,247,0.8)]"
           style={{ height: "100vh", scaleY }}
@@ -36,35 +48,25 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
 
         {/* --- 1. THE HERO --- */}
         <section className="h-screen flex flex-col justify-center px-10 md:px-24 relative">
-          <motion.div 
-             style={{ y: y1 }}
-             className="absolute top-20 right-20 opacity-10 blur-sm pointer-events-none"
-          >
+          <motion.div style={{ y: y1 }} className="absolute top-20 right-20 opacity-10 blur-sm pointer-events-none">
              <Code size={400} />
           </motion.div>
 
           <motion.div initial={fadeInUp.initial} whileInView={fadeInUp.whileInView} transition={fadeInUp.transition}>
             <div className="relative inline-block">
               <Image src="/logo.png" alt="Logo" width={400} height={400} className="mb-10 drop-shadow-[0_0_20px_rgba(168,85,247,0.4)]" />
-              <motion.div 
-                animate={{ opacity: [0, 1, 0] }} 
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -top-2 -right-2 text-purple-400"
-              >
+              <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute -top-2 -right-2 text-purple-400">
                 <Sparkles size={30} />
               </motion.div>
             </div>
-            
             <h1 className="text-5xl md:text-6xl font-black tracking-tighter italic leading-[0.85] mb-6 uppercase">
               Clear Path from <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 font-normal">Beginner to Pro.</span>
             </h1>
-            
             <p className="text-gray-400 text-xl max-w-lg leading-relaxed border-l-4 border-purple-500 pl-6 bg-white/5 py-4 rounded-r-xl">
               NextGen is an interactive, gamified learning platform designed to take you from a C beginner to an advanced master. 🤖💻
             </p>
           </motion.div>
-          
           <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-10 flex items-center gap-3 text-zinc-600 font-mono text-xs">
             <ChevronDown size={18} /> INITIALIZING_STORY_SCROLL
           </motion.div>
@@ -80,7 +82,6 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
                 Everything is linked—progress only when you master the concept.
               </p>
             </motion.div>
-
             <div className="flex-1 relative h-[400px] w-full hidden md:block">
               <StudyCard icon={<StickyNote color="#eab308"/>} label="Sticky Notes" delay={0} x="10%" y="10%" />
               <StudyCard icon={<HelpCircle color="#3b82f6"/>} label="Daily Quizzes" delay={0} x="50%" y="40%" />
@@ -102,29 +103,11 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
               <p className="text-gray-400 text-lg mb-8 italic">
                 Stuck on a bug? Ask the Robo-Assistant. It explains code line-by-line and helps debug errors in real-time.
               </p>
-              <motion.div whileHover={{ scale: 1.05 }} className="p-4 bg-zinc-900 border border-blue-500/30 rounded-2xl font-mono text-sm text-blue-300 inline-flex items-center gap-3 cursor-default">
-                <span className="animate-pulse">●</span>ALWAYS THERE FOR YOU 
-              </motion.div>
             </motion.div>
-
-            <motion.div 
-              initial={{ scale: 0, y: 100 }} 
-              whileInView={{ scale: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="flex-1 flex flex-col items-center order-1 md:order-2"
-            >
+            <motion.div initial={{ scale: 0, y: 100 }} whileInView={{ scale: 1, y: 0 }} transition={{ duration: 0.4 }} className="flex-1 flex flex-col items-center order-1 md:order-2">
               <div className="relative group">
-                <motion.div 
-                  animate={{ y: [0, -20, 0] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                  className="relative p-10 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full border border-blue-500/30 shadow-[0_0_50px_rgba(59,130,246,0.3)]"
-                >
+                <motion.div animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="relative p-10 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full border border-blue-500/30 shadow-[0_0_50px_rgba(59,130,246,0.3)]">
                   <Cpu size={100} className="text-blue-400 animate-pulse" />
-                  <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-                    className="absolute inset-0 border-2 border-dashed border-blue-500/30 rounded-full"
-                  />
                 </motion.div>
                 <div className="absolute -top-10 -right-20 bg-blue-600 text-white px-6 py-2 rounded-2xl rounded-bl-none font-black shadow-xl whitespace-nowrap">
                   Hi! Your AI Helper here!
@@ -146,7 +129,7 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
         </section>
       </main>
 
-      {/* --- RIGHT SIDE: PERMANENT FIXED AUTH RECTANGLE --- */}
+      {/* --- 🛡️ FIXED AUTH RECTANGLE --- */}
       <aside className="md:w-[500px] md:h-screen md:fixed md:right-0 md:top-0 p-6 md:p-10 flex items-center justify-center z-30">
         <motion.div layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full bg-[#0d0d0d] border border-white/10 p-10 rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-600/10 blur-3xl rounded-full" />
@@ -157,7 +140,8 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
                   <h3 className="text-3xl font-black italic tracking-tighter mb-2 uppercase">LOG IN</h3>
                   <p className="text-gray-500 text-xs font-mono uppercase tracking-widest italic text-purple-500/80">Let's enter the world of programming</p>
                 </div>
-                <form className="space-y-4 relative">
+                
+                <form className="space-y-4 relative" onSubmit={(e) => e.preventDefault()}>
                   <div className="relative group">
                     <Mail className="absolute left-4 top-4 text-gray-700 group-focus-within:text-purple-500 transition-colors" size={18} />
                     <input type="email" placeholder="Email" className="w-full bg-black border border-white/5 p-4 pl-12 rounded-2xl focus:border-purple-500 outline-none" />
@@ -166,14 +150,24 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
                     <Lock className="absolute left-4 top-4 text-gray-700 group-focus-within:text-purple-500 transition-colors" size={18} />
                     <input type="password" placeholder="Password" className="w-full bg-black border border-white/5 p-4 pl-12 rounded-2xl focus:border-purple-500 outline-none" />
                   </div>
-                  <button onClick={onLoginSuccess} className="w-full bg-purple-600 py-4 rounded-2xl font-black text-white hover:bg-purple-700 transition-all shadow-lg">LOGIN_TO_SYSTEM</button>
+                  
+                  <button onClick={onLoginSuccess} className="w-full bg-purple-600 py-4 rounded-2xl font-black text-white hover:bg-purple-700 transition-all shadow-lg">
+                    LOGIN_TO_SYSTEM
+                  </button>
+
+                  <button 
+                  onClick={() => router.push('/')} 
+                  className="w-full bg-[#161b22] border border-white/10 py-4 rounded-2xl font-black text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                    <Zap size={16} className="text-yellow-500"/> CONTINUE_AS_GUEST
+</button>
                 </form>
-                <div className="mt-6 flex justify-between items-center text-xs">
-                  <button onClick={() => setAuthState('reg-email')} className="text-purple-500 hover:underline">New user? Register</button>
-                  <button onClick={onLoginSuccess} className="text-gray-500 flex items-center gap-1 hover:text-white transition-colors"><Zap size={12} className="text-yellow-500"/> Guest Mode</button>
-                </div>
+
+                <p className="mt-8 text-center text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                  New to the platform? <span onClick={() => setAuthState('reg-email')} className="text-purple-500 cursor-pointer hover:underline uppercase">Create Account</span>
+                </p>
               </motion.div>
             )}
+
             {authState === 'reg-email' && (
               <motion.div key="reg-email" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 <h3 className="text-3xl font-black italic mb-2 tracking-tighter uppercase text-blue-400">Register</h3>
@@ -188,18 +182,21 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: () => 
                 </div>
               </motion.div>
             )}
+
             {authState === 'reg-otp' && (
               <motion.div key="reg-otp" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 <h3 className="text-3xl font-black italic mb-2 tracking-tighter uppercase text-yellow-500">Verify</h3>
                 <p className="text-gray-500 text-xs font-mono mb-8 uppercase tracking-widest italic">Step 02: One-Time Passcode</p>
-                <div className="space-y-6">
+                <div className="space-y-6 text-center">
                   <div className="flex justify-center gap-2">
                     {[1, 2, 3, 4].map((i) => (<input key={i} type="text" maxLength={1} className="w-12 h-14 bg-black border border-white/10 rounded-xl text-center text-xl font-bold focus:border-yellow-500 outline-none" />))}
                   </div>
                   <button onClick={() => setAuthState('reg-pass')} className="w-full bg-yellow-600 py-4 rounded-2xl font-black text-black">VERIFY_OTP</button>
+                  <button onClick={() => setAuthState('reg-email')} className="text-xs text-gray-600 hover:text-white mt-4 italic uppercase tracking-widest">Resend Code</button>
                 </div>
               </motion.div>
             )}
+
             {authState === 'reg-pass' && (
               <motion.div key="reg-pass" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
                 <h3 className="text-3xl font-black italic mb-2 tracking-tighter uppercase text-green-500">Secure</h3>
