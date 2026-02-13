@@ -71,7 +71,6 @@ export default function CodeItPage() {
 
                 <div className="space-y-4">
                   <h4 className="text-xs uppercase text-gray-500 font-bold mb-3 tracking-widest">Examples:</h4>
-                  {/* Changed from sampleTestCases to testCases to match your data structure */}
                   {level.challenge.testCases?.map((test, i) => (
                     <div key={i} className="bg-[#282828] p-4 rounded-lg border border-[#333] font-mono text-sm">
                       <div className="mb-3">

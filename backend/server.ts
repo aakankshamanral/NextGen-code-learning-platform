@@ -1,38 +1,56 @@
 import express from 'express';
-import type { Request, Response } from 'express'; 
-import { exec } from 'child_process';
-import fs from 'fs';
 import cors from 'cors';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
 
+const execPromise = promisify(exec);
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*", // In production, replace with your actual frontend URL
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
 app.use(express.json());
 
-interface CodeRequest {
-  code: string;
-  input: string;
-}
+app.post('/run', async (req, res) => {
+  const { code, language, input = "" } = req.body;
+  
+  if (language !== 'c') {
+    return res.status(400).json({ error: "Only C is supported for now" });
+  }
 
-app.post('/run', (req: Request<{}, {}, CodeRequest>, res: Response) => {
-  const { code, input } = req.body;
-  const uniqueId = Date.now();
-  const filename = `temp_${uniqueId}.c`;
-  const binaryName = `out_${uniqueId}`;
+  const jobId = Math.random().toString(36).substring(7);
+  const fileName = `code_${jobId}.c`;
+  const outputName = `out_${jobId}`;
+  const filePath = path.join(__dirname, fileName);
 
-  fs.writeFileSync(filename, code);
+  try {
+    // 1. Write the code to a file
+    fs.writeFileSync(filePath, code);
 
-  const command = `gcc ${filename} -o ${binaryName} && echo "${input}" | ./${binaryName}`;
+    // 2. Compile the code
+    await execPromise(`gcc ${filePath} -o ${outputName}`);
 
-  exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
-    if (fs.existsSync(filename)) fs.unlinkSync(filename);
-    if (fs.existsSync(binaryName)) fs.unlinkSync(binaryName);
+    // 3. Execute the code with input and a 2-second timeout
+    // Using 'echo' to pipe input into the compiled binary
+    const { stdout, stderr } = await execPromise(`echo "${input}" | ./${outputName}`, {
+      timeout: 2000, 
+      maxBuffer: 1024 * 512 // 512KB limit
+    });
 
-    if (error) {
-      return res.json({ status: "error", message: stderr || error.message });
-    }
-    res.json({ status: "success", output: stdout.trim() });
-  });
+    res.json({ output: stdout, stderr });
+
+  } catch (err: any) {
+    res.status(400).json({ 
+      error: err.stderr || err.message || "Execution failed" 
+    });
+  } finally {
+    // 4. Cleanup files immediately for speed/storage
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    if (fs.existsSync(outputName)) fs.unlinkSync(outputName);
+  }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 NextGen Engine running on port ${PORT}`));
+app.listen(5000, () => console.log('🚀 Compiler Engine running on port 5000'));

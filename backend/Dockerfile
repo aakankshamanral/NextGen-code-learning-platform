@@ -1,21 +1,26 @@
-# 1. Use Node.js as the base image
-FROM node:24.13.0
+# Use a slim Node image for faster downloads and smaller footprint
+FROM node:20-slim
 
-# 2. Install GCC and essential tools for C compilation
-RUN apt-get update && apt-get install -y gcc g++ make
+# Install GCC compiler
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
-# 3. Create and set the working directory
 WORKDIR /app
 
-# 4. Copy package files and install dependencies
+# Install dependencies first (better caching)
 COPY package*.json ./
 RUN npm install
 
-# 5. Copy the rest of your backend code
+# Copy source code
 COPY . .
 
-# 6. Expose the port your server runs on
+# Security: Don't run user code as root
+RUN useradd -m sandbox
+USER sandbox
+
 EXPOSE 5000
 
-# 7. Start the engine using the ESM loader
-CMD ["node", "--loader", "ts-node/esm", "server.ts"]
+# Start server
+CMD ["npx", "ts-node", "server.ts"]
